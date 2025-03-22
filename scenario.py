@@ -52,7 +52,7 @@ def popscene1(runs1):
         opt_D = "D. Give jess new homework"
 
     elif runs1== 2:
-        print("Jess claims Beatrice ate her homework, Beatrice swears thats not the case... Jess has previously claimed that her dog ate her homework")
+        print("Blake claims Anna ate her homework, Beatrice swears thats not the case... Blake has previously claimed that her dog ate her homework.")
         opt_A = "A. Dismiss the claim as absurd without investigating."
 
         opt_B = "B. Ask the class if anyone witnessed what happened.", 
@@ -62,15 +62,15 @@ def popscene1(runs1):
         opt_D = "D. Give jess new homework"
     elif runs1== 3:
         print("Pen thief alert! Mark has been caught with two of his classmates' favorite pens. He claims he was just holding them for safekeeping.")
-        opt_A = ""
+        opt_A = "A. Make Mark return the pens and apologize."
 
-        opt_B = "" 
+        opt_B = "B. Ignore it, maybe the pens needed a new home." 
 
-        opt_C = ""
+        opt_C = " "
 
         opt_D = ""
     elif runs1== 4:
-        print("Alex and Mia are playing ‘doctor’ during recess. Mia is now diagnosing kids with homework flu and prescribing no homework for a week.")
+        print("Alex and Mia are playing doctor during recess. Mia is now diagnosing kids with homework flu and prescribing no homework for a week.")
         opt_A = ""
 
         opt_B = "" 
@@ -79,7 +79,7 @@ def popscene1(runs1):
 
         opt_D = ""
     elif runs1== 5:
-        print("")
+        print("Leo thought it was a good idea to test if the toy car fits in his ear. Spoiler: It doesn't.")
         opt_A = ""
 
         opt_B = "" 
@@ -88,7 +88,7 @@ def popscene1(runs1):
 
         opt_D = ""
     elif runs1== 6:
-        print("")
+        print("Emily refuses to share her crayons with anyone, claiming she’s building her own art empire.")
         opt_A = ""
 
         opt_B = "" 

@@ -11,6 +11,7 @@ pygame.display.set_caption("Classroom Game")
 
 # Load the background image
 background = pygame.image.load("assets/background/classroom_chaos_main_background.png")
+background = background.convert()
 
 # Scale the background image to fit the window
 background = pygame.transform.scale(background, (width, height))
