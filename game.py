@@ -67,11 +67,12 @@ def show_scenario_screen(scenario, options, table_number):
         screen.blit(no_scenario_text, (50, 50))  # Display the message
         pygame.display.flip()
 
-        # Wait for a short time (e.g., 2 seconds) before returning to the main screen
+        # Wait for a short time before returning to the main screen
         pygame.time.delay(2000)
         return
 
     # If a scenario is available, proceed as before
+    
     screen.fill((255, 255, 255))  # Clear screen with white background
     font = pygame.font.Font(None, 36)
 
@@ -119,7 +120,7 @@ def show_scenario_screen(scenario, options, table_number):
 def go_to_next_screen(table_number):
     print(f"You clicked on Table {table_number}!")
 
-    if table_number == 10:  # class_table_2
+    if table_number == 10:
         run_math_game(screen, width, height)
     else:
         runs1 = random.randint(1, 8)

@@ -48,6 +48,7 @@ def popscene1(runs1):
             "C. Call Beatrice's parents immediately.",
             "D. Give Jess new homework."
         ]
+        scores= ["childish","okay", "neglectful", "okay"]
     elif runs1 == 2:
         scenario = "Blake claims Anna ate her homework, Beatrice swears that's not the case... Blake has previously claimed that her dog ate her homework."
         options = [
@@ -56,6 +57,7 @@ def popscene1(runs1):
             "C. Call Beatrice's parents immediately.",
             "D. Give Jess new homework."
         ]
+        scores= ["childish","okay", "neglectful", "okay"]
     elif runs1 == 3:
         scenario = "Pen thief alert! Mark has been caught with two of his classmates' favorite pens. He claims he was just holding them for safekeeping."
         options = [
@@ -64,6 +66,7 @@ def popscene1(runs1):
             "C. Hold a class meeting on the importance of sharing.",
             "D. Let Mark safekeep them."
         ]
+        scores= ["childish","okay", "neglectful", "okay"]
     elif runs1 == 4:
         scenario = "Alex and Mia are playing doctor during recess. Mia is now diagnosing kids with homework flu and prescribing no homework for a week."
         options = [
@@ -72,6 +75,7 @@ def popscene1(runs1):
             "C. Explain that doctors need to finish their work first.",
             "D. Laugh and tell them they should open a clinic."
         ]
+        scores= ["motivational","neglectful", "okay", "childish"]
     elif runs1 == 5:
         scenario = "Leo thought it was a good idea to test if the toy car fits in his ear. Spoiler: It doesn't."
         options = [
@@ -80,6 +84,7 @@ def popscene1(runs1):
             "C. Call another teacher, this is above your pay grade.",
             "D. Send Leo to the nurse immediately."
         ]
+        scores= ["childish","okay", "neglectful", "okay"]
     elif runs1 == 6:
         scenario = "Emily refuses to share her crayons with anyone, claiming she is building her own art empire."
         options = [
@@ -88,6 +93,7 @@ def popscene1(runs1):
             "C. Trade a sticker for crayons.",
             "D. Help her build her empire."
         ]
+        scores= ["okay","magical", "childish", "motivational"]
     elif runs1 == 7:
         scenario = "Ben has discovered the joy of scented markers and is now holding a sniffing contest during art class."
         options = [
@@ -96,14 +102,16 @@ def popscene1(runs1):
             "C. Ignore it and let them have fun.",
             "D. Call the principal to handle it."
         ]
+        scores= ["childish","strict", "neglectful", "strict"]
     elif runs1 == 8:
-        scenario = "Sophia has decided to redecorate the classroom walls with her crayons./n"
+        scenario = "Sophia has decided to redecorate the classroom walls with her crayons."
         options = [
             "A. Praise her creativity and add your own drawing.",
             "B. Ask her to clean it up immediately.",
             "C. Call her parents to discuss her artistic tendencies.",
             "D. Ignore it and hope no one notices."
         ]
+        scores= ["childish","strict", "motivational", "neglectful"]
     else:
         scenario = "No scenario available."
         options = []
@@ -111,6 +119,5 @@ def popscene1(runs1):
     return scenario, options
     # "Jess claims Beatrice ate her homework"
 
-
-popup={}
-table={}
+def class_event():
+    pass
