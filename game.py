@@ -50,10 +50,17 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            for i, table in enumerate(student_tables, start=1):  # Start counting tables from 1
+            # Check student tables
+            for i, table in enumerate(student_tables, start=1):
                 if table.collidepoint(mouse_pos):
-                    go_to_next_screen(i)  # Trigger action for the clicked table
-                    break  # Stop checking other tables once one is clicked
+                    go_to_next_screen(i)
+                    break
+
+            # Check task tables
+            for j, table in enumerate(task_tables, start=9):  # Continue numbering from 9
+                if table.collidepoint(mouse_pos):
+                    go_to_next_screen(j)
+                    break
 
     # Draw the background image
     screen.blit(background, (0, 0))
@@ -61,6 +68,10 @@ while running:
     # Draw clickable tables (optional: just for visual reference)
     for table in student_tables:
         pygame.draw.rect(screen, (255, 0, 0), table, 2)  # Red outline for tables
+
+    # Draw outlines for task tables (blue)
+    for table in task_tables:
+        pygame.draw.rect(screen, (0, 0, 255), table, 2)
 
     # Update the display
     pygame.display.flip()
