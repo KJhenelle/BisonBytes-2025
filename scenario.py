@@ -2,8 +2,8 @@ import random
 import pygame
 import sys
 import random
-import tkinter as tk
-from tkinter import messagebox
+# import tkinter as tk
+# from tkinter import messagebox
 
 # Function to check the selected answer
 # def check_answer(selected_choice):

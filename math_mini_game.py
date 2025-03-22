@@ -3,6 +3,10 @@ import random
 import sys
 import time
 
+background = pygame.image.load("assets/background/chalk_backgrd.jpg")
+background = background.convert()
+background = pygame.transform.scale(background, (width, height))
+
 def generate_question():
     ops = ['+', '-', '*']
     a = random.randint(1, 10)
@@ -19,7 +23,13 @@ def generate_question():
     question = f"{a} {op} {b}"
     return question, result
 
+
+
 def run_math_game(screen, width, height):
+    # background = pygame.image.load("assets/background/chalk_backgrd.jpg")
+    # background = background.convert()
+    # background = pygame.transform.scale(background, (width, height))
+
     score = 0
     start_time = time.time()
     font_large = pygame.font.SysFont(None, 60)
@@ -45,7 +55,7 @@ def run_math_game(screen, width, height):
 
     running_game = True
     while running_game and time.time() - start_time < 30:
-        screen.fill((255, 255, 255))
+        screen.blit(background, (0, 0))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
