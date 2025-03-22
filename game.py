@@ -19,7 +19,7 @@ background = pygame.transform.scale(background, (width, height))
 student_tables = [
     pygame.Rect(100, 250, 125, 100),  # Table 1 (Green chair)
 
-    pygame.Rect(350, 150, 125, 100),  # Table 2 (Green chair)
+    pygame.Rect(200, 150, 125, 100),  # Table 2 (Green chair)
 
 
     pygame.Rect(500, 150, 100, 100),  # Table 3 (Blue chair)
@@ -50,7 +50,7 @@ while running:
     screen.blit(background, (0, 0))
 
     # Draw clickable tables (optional: just for visual reference)
-    for table in tables:
+    for table in student_tables:
         pygame.draw.rect(screen, (255, 0, 0), table, 2)  # Red outline for tables
 
     # Update the display
