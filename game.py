@@ -16,18 +16,17 @@ background = pygame.image.load("assets/background/classroom_chaos_main_backgroun
 background = pygame.transform.scale(background, (width, height))
 
 # Define clickable areas (tables) based on the screenshot positions
-student_tables = [
-    pygame.Rect(100, 250, 125, 100),  # Table 1 (Green chair)
+table_1 = pygame.Rect(100, 250, 125, 100)  # Table 1, Row 1
+table_2 = pygame.Rect(265, 250, 125, 100)  # Table 2, Row 1
+table_3 = pygame.Rect(420, 250, 125, 100)  # Table 3, Row 1
+table_4 = pygame.Rect(580, 250, 125, 100)  # Table 4, Row 1
 
-    pygame.Rect(200, 150, 125, 100),  # Table 2 (Green chair)
+table_5 = pygame.Rect(100, 370, 125, 100)  # Table 4, Row 2
+table_6 = pygame.Rect(265, 370, 125, 100)  # Table 5, Row 2
+table_7 = pygame.Rect(420, 370, 125, 100)  # Table 6, Row 2
+table_8 = pygame.Rect(580, 370, 125, 100)  # Table 4, Row 2
 
-
-    pygame.Rect(500, 150, 100, 100),  # Table 3 (Blue chair)
-
-    pygame.Rect(200, 300, 100, 100),  # Table 4 (Orange chair)
-    pygame.Rect(350, 300, 100, 100),  # Table 5 (Orange chair)
-    pygame.Rect(500, 300, 100, 100),  # Table 6 (Orange chair)
-]
+student_tables = [table_1, table_2, table_3, table_4, table_5, table_6, table_7, table_8]
 
 # Function to switch to a different screen (just a placeholder here)
 def go_to_next_screen(table_number):
@@ -41,7 +40,7 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            for i, table in enumerate(tables, start=1):  # Start counting tables from 1
+            for i, table in enumerate(student_tables, start=1):  # Start counting tables from 1
                 if table.collidepoint(mouse_pos):
                     go_to_next_screen(i)  # Trigger action for the clicked table
                     break  # Stop checking other tables once one is clicked
