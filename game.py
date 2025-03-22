@@ -30,11 +30,11 @@ table_8 = pygame.Rect(580, 370, 125, 100)  # Table 4, Row 2
 student_tables = [table_1, table_2, table_3, table_4, table_5, table_6, table_7, table_8]
 
 #classroom task tables
-class_table_1 = pygame.Rect(95, 470, 125, 100),  # Table 1 (bottom left computer)
-class_table_2 = pygame.Rect(260, 470, 125, 100),  # Table 2 (bottom left student)
-class_table_3 = pygame.Rect(425, 470, 125, 100),  # Table 3 (bottom right student)
-class_table_4 = pygame.Rect(305, 120, 200, 125),  # Table 4 (teacher table)
-class_table_5 = pygame.Rect(515, 100, 80, 100),  # Table 5 (Orange chair)
+class_table_1 = pygame.Rect(95, 470, 125, 100)  # Table 1 (bottom left computer)
+class_table_2 = pygame.Rect(260, 470, 125, 100)  # Table 2 (bottom left student)
+class_table_3 = pygame.Rect(425, 470, 125, 100)  # Table 3 (bottom right student)
+class_table_4 = pygame.Rect(305, 120, 200, 125)  # Table 4 (teacher table)
+class_table_5 = pygame.Rect(515, 100, 80, 100)  # Table 5 (Orange chair)
 
 task_tables = [class_table_1, class_table_2, class_table_3, class_table_4, class_table_5]
 
