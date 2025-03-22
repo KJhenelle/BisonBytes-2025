@@ -37,88 +37,79 @@ from tkinter import messagebox
 # # Start the GUI main loop
 # root.mainloop()
 
-runs1 = random.randint(1, 10)
+# runs1 = random.randint(1, 10)
 
 def popscene1(runs1):
-    #if it hasnt already run before
-    if runs1== 1:
-        print("Jess claims Beatrice ate her homework, Beatrice swears thats not the case... There are paper scraps on Beatrice's Desk")
-        opt_A = "A. Dismiss the claim as absurd without investigating."
-
-        opt_B = "B. Ask the class if anyone witnessed what happened.", 
-
-        opt_C = "C. Call Beatrices parents immediatly"
-
-        opt_D = "D. Give jess new homework"
-
-    elif runs1== 2:
-        print("Blake claims Anna ate her homework, Beatrice swears thats not the case... Blake has previously claimed that her dog ate her homework.")
-        opt_A = "A. Dismiss the claim as absurd without investigating."
-
-        opt_B = "B. Ask the class if anyone witnessed what happened.", 
-
-        opt_C = "C. Call Beatrices parents immediatly"
-
-        opt_D = "D. Give jess new homework"
-    elif runs1== 3:
-        print("Pen thief alert! Mark has been caught with two of his classmates' favorite pens. He claims he was just holding them for safekeeping.")
-        opt_A = "A. Make Mark return the pens and apologize."
-
-        opt_B = "B. Ignore it, maybe the pens needed a new home." 
-
-        opt_C = " "
-
-        opt_D = ""
-    elif runs1== 4:
-        print("Alex and Mia are playing doctor during recess. Mia is now diagnosing kids with homework flu and prescribing no homework for a week.")
-        opt_A = ""
-
-        opt_B = "" 
-
-        opt_C = ""
-
-        opt_D = ""
-    elif runs1== 5:
-        print("Leo thought it was a good idea to test if the toy car fits in his ear. Spoiler: It doesn't.")
-        opt_A = ""
-
-        opt_B = "" 
-
-        opt_C = ""
-
-        opt_D = ""
-    elif runs1== 6:
-        print("Emily refuses to share her crayons with anyone, claiming she’s building her own art empire.")
-        opt_A = ""
-
-        opt_B = "" 
-
-        opt_C = ""
-
-        opt_D = ""
-    elif runs1== 7:
-        print("")
-        opt_A = ""
-
-        opt_B = "" 
-
-        opt_C = ""
-
-        opt_D = ""
-    elif runs1== 8:
-        print("")
-        opt_A = ""
-
-        opt_B = "" 
-
-        opt_C = ""
-
-        opt_D = ""
+    if runs1 == 1:
+        scenario = "Jess claims Beatrice ate her homework, Beatrice swears that's not the case... There are paper scraps on Beatrice's Desk."
+        options = [
+            "A. Dismiss the claim as absurd without investigating.",
+            "B. Ask the class if anyone witnessed what happened.",
+            "C. Call Beatrice's parents immediately.",
+            "D. Give Jess new homework."
+        ]
+    elif runs1 == 2:
+        scenario = "Blake claims Anna ate her homework, Beatrice swears that's not the case... Blake has previously claimed that her dog ate her homework."
+        options = [
+            "A. Dismiss the claim as absurd without investigating.",
+            "B. Ask the class if anyone witnessed what happened.",
+            "C. Call Beatrice's parents immediately.",
+            "D. Give Jess new homework."
+        ]
+    elif runs1 == 3:
+        scenario = "Pen thief alert! Mark has been caught with two of his classmates' favorite pens. He claims he was just holding them for safekeeping."
+        options = [
+            "A. Make Mark return the pens and apologize.",
+            "B. Ignore it, maybe the pens needed a new home.",
+            "C. Hold a class meeting on the importance of sharing.",
+            "D. Let Mark safekeep them."
+        ]
+    elif runs1 == 4:
+        scenario = "Alex and Mia are playing doctor during recess. Mia is now diagnosing kids with homework flu and prescribing no homework for a week."
+        options = [
+            "A. Encourage their creativity and hand them a toy stethoscope.",
+            "B. Call the school nurse to take over.",
+            "C. Explain that doctors need to finish their work first.",
+            "D. Laugh and tell them they should open a clinic."
+        ]
+    elif runs1 == 5:
+        scenario = "Leo thought it was a good idea to test if the toy car fits in his ear. Spoiler: It doesn't."
+        options = [
+            "A. Ask him if he wants to try the other ear.",
+            "B. Give him a lecture on what ears are for.",
+            "C. Call another teacher, this is above your pay grade.",
+            "D. Send Leo to the nurse immediately."
+        ]
+    elif runs1 == 6:
+        scenario = "Emily refuses to share her crayons with anyone, claiming she is building her own art empire."
+        options = [
+            "A. Ask Emily to politely share.",
+            "B. Explain the magic of sharing.",
+            "C. Trade a sticker for crayons.",
+            "D. Help her build her empire."
+        ]
+    elif runs1 == 7:
+        scenario = "Ben has discovered the joy of scented markers and is now holding a sniffing contest during art class."
+        options = [
+            "A. Join the contest and declare a winner.",
+            "B. Confiscate the markers and explain the dangers.",
+            "C. Ignore it and let them have fun.",
+            "D. Call the principal to handle it."
+        ]
+    elif runs1 == 8:
+        scenario = "Sophia has decided to redecorate the classroom walls with her crayons./n"
+        options = [
+            "A. Praise her creativity and add your own drawing.",
+            "B. Ask her to clean it up immediately.",
+            "C. Call her parents to discuss her artistic tendencies.",
+            "D. Ignore it and hope no one notices."
+        ]
     else:
-        pass
-    
+        scenario = "No scenario available."
+        options = []
 
-    "Jess claims Beatrice ate her homework"
+    return scenario, options
+    # "Jess claims Beatrice ate her homework"
 
 
 popup={}
