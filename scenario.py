@@ -48,16 +48,16 @@ def popscene1(runs1):
             "C. Call Beatrice's parents immediately.",
             "D. Give Jess new homework."
         ]
-        scores= ["childish","okay", "neglectful", "okay"]
+        scores= ["neglectful","okay", "strict", "okay"]
     elif runs1 == 2:
-        scenario = "Blake claims Anna ate her homework, Beatrice swears that's not the case... Blake has previously claimed that her dog ate her homework."
+        scenario = "Blake claims Anna ate her homework, Anna swears that's not the case... Blake has previously claimed that his dog ate his homework."
         options = [
-            "A. Dismiss the claim as absurd without investigating.",
-            "B. Ask the class if anyone witnessed what happened.",
-            "C. Call Beatrice's parents immediately.",
-            "D. Give Jess new homework."
+            "A. Dismiss the claim as absurd.",
+            "B. Scold Blake for lying.",
+            "C. Call Anna's parents immediately.",
+            "D. Give Blake new homework."
         ]
-        scores= ["childish","okay", "neglectful", "okay"]
+        scores= ["okay","strict", "neglectful", "okay"]
     elif runs1 == 3:
         scenario = "Pen thief alert! Mark has been caught with two of his classmates' favorite pens. He claims he was just holding them for safekeeping."
         options = [
@@ -66,7 +66,7 @@ def popscene1(runs1):
             "C. Hold a class meeting on the importance of sharing.",
             "D. Let Mark safekeep them."
         ]
-        scores= ["childish","okay", "neglectful", "okay"]
+        scores= ["okay","neglectful", "strict", "childish"]
     elif runs1 == 4:
         scenario = "Alex and Mia are playing doctor during recess. Mia is now diagnosing kids with homework flu and prescribing no homework for a week."
         options = [

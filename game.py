@@ -3,6 +3,7 @@ import sys
 import random
 from scenario import popscene1
 from math_mini_game import run_math_game
+from read_mini_game import run_read_game
 
 # Initialize Pygame
 pygame.init()
@@ -42,6 +43,19 @@ class_table_5 = pygame.Rect(515, 100, 80, 100)  # Table 5 (Orange chair)
 
 task_tables = [class_table_1, class_table_2, class_table_3, class_table_4, class_table_5]
 
+# Table states
+table_states = {
+    table: {"clickable": False, "timer": 0, "sprite_index": 0} for table in student_tables + task_tables
+}
+
+# Load the timer sprites
+timer_sprites = [
+    pygame.image.load(f"assets/sprite_{i}.png").convert_alpha() for i in range(4)
+]
+clickable_sprite = pygame.image.load("assets/sprite_4.png").convert_alpha()
+
+
+
 def wrap_text(text, font, max_width):
     words = text.split(" ")
     lines = []
@@ -58,6 +72,7 @@ def wrap_text(text, font, max_width):
     return lines
 
 # Function to display the scenario and options
+# Function to display the scenario and options
 def show_scenario_screen(scenario, options, table_number):
     if not scenario:  # If no scenario is available
         # Display a message on the original screen
@@ -67,12 +82,11 @@ def show_scenario_screen(scenario, options, table_number):
         screen.blit(no_scenario_text, (50, 50))  # Display the message
         pygame.display.flip()
 
-        # Wait for a short time before returning to the main screen
+        # Wait for a short time (e.g., 2 seconds) before returning to the main screen
         pygame.time.delay(2000)
         return
 
     # If a scenario is available, proceed as before
-    
     screen.fill((255, 255, 255))  # Clear screen with white background
     font = pygame.font.Font(None, 36)
 
@@ -100,7 +114,6 @@ def show_scenario_screen(scenario, options, table_number):
         pygame.draw.rect(screen, (0, 0, 255), option_rect, 2)  # Blue outline for visibility
         option_rects.append(option_rect)
         y_offset += len(option_lines) * 30 + 20  # Add spacing between options
-
     pygame.display.flip()
 
     # Wait for user input
@@ -122,6 +135,8 @@ def go_to_next_screen(table_number):
 
     if table_number == 10:
         run_math_game(screen, width, height)
+    if table_number == 11:
+        run_read_game(screen, width)
     else:
         runs1 = random.randint(1, 8)
         scenario, options = popscene1(runs1)
@@ -130,9 +145,41 @@ def go_to_next_screen(table_number):
     # Display the scenario and options
     show_scenario_screen(scenario, options, table_number)
 
+
+# # Load the life tracker image
+# life_tracker_image = pygame.image.load("assets/life_tracker.png")  # Replace with your image path
+# life_tracker_image = life_tracker_image.convert_alpha()  # Use convert_alpha() for transparency
+
+# # Define the position of the life tracker (e.g., top-right corner)
+# life_tracker_position = (width - life_tracker_image.get_width() - 20, 20)  # 20px padding from top and right
+
+# # Main game loop
+# running = True
+# while running:
+#     for event in pygame.event.get():
+#         if event.type == pygame.QUIT:
+#             running = False
+#         if event.type == pygame.MOUSEBUTTONDOWN:
+#             mouse_pos = pygame.mouse.get_pos()
+#             # Check student tables
+#             for i, table in enumerate(student_tables, start=1):
+#                 if table.collidepoint(mouse_pos):
+#                     go_to_next_screen(i)
+#                     break
+
+#             # Check task tables
+#             for j, table in enumerate(task_tables, start=9):  # Continue numbering from 9
+#                 if table.collidepoint(mouse_pos):
+#                     go_to_next_screen(j)
+#                     break
+
+
 # Main game loop
 running = True
+clock = pygame.time.Clock()
 while running:
+    dt = clock.tick(60) / 1000  # Delta time in seconds
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -140,26 +187,53 @@ while running:
             mouse_pos = pygame.mouse.get_pos()
             # Check student tables
             for i, table in enumerate(student_tables, start=1):
-                if table.collidepoint(mouse_pos):
+                if table.collidepoint(mouse_pos) and table_states[table]["clickable"]:
                     go_to_next_screen(i)
+                    table_states[table]["clickable"] = False  # Make the table non-clickable
+                    table_states[table]["timer"] = 0  # Reset the timer
+                    table_states[table]["sprite_index"] = 0  # Reset the sprite index
                     break
 
             # Check task tables
             for j, table in enumerate(task_tables, start=9):  # Continue numbering from 9
-                if table.collidepoint(mouse_pos):
+                if table.collidepoint(mouse_pos) and table_states[table]["clickable"]:
                     go_to_next_screen(j)
+                    table_states[table]["clickable"] = False  # Make the table non-clickable
+                    table_states[table]["timer"] = 0  # Reset the timer
+                    table_states[table]["sprite_index"] = 0  # Reset the sprite index
                     break
+
+    # Update table states
+    for table in student_tables + task_tables:
+        if table_states[table]["clickable"]:
+            # Update the timer
+            table_states[table]["timer"] += dt
+            if table_states[table]["timer"] >= 5:  # 5 seconds elapsed
+                table_states[table]["clickable"] = False
+                table_states[table]["timer"] = 0
+                table_states[table]["sprite_index"] = 0
+        else:
+            # Randomly make a table clickable
+            if random.random() < 0.01:  # 1% chance per frame
+                table_states[table]["clickable"] = True
+                table_states[table]["timer"] = 0
+                table_states[table]["sprite_index"] = 0
 
     # Draw the background image
     screen.blit(background, (0, 0))
 
-    # Draw clickable tables (optional: just for visual reference)
-    for table in student_tables:
-        pygame.draw.rect(screen, (255, 0, 0), table, 2)  # Red outline for tables
+    # # Draw the life tracker
+    # screen.blit(life_tracker_image, life_tracker_position)
 
-    # Draw outlines for task tables (blue)
-    for table in task_tables:
-        pygame.draw.rect(screen, (0, 0, 255), table, 2)
+    # Draw clickable tables with appropriate sprites
+    for table in student_tables + task_tables:
+        if table_states[table]["clickable"]:
+            # Display the clickable sprite
+            screen.blit(clickable_sprite, table.topleft)
+        else:
+            # Display the timer sprite
+            sprite_index = min(int(table_states[table]["timer"]), 3)
+            screen.blit(timer_sprites[sprite_index], table.topleft)
 
     # Update the display
     pygame.display.flip()
