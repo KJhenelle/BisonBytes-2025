@@ -67,63 +67,63 @@ events = [
     }
 ]
 
-
-# Button class
 class Button:
     def __init__(self, text, x, y, width, height, choice):
         self.text = text
         self.rect = pygame.Rect(x, y, width, height)
-        self.choice = choice  # Store choice letter (A, B, C, D)
+        self.choice = choice
 
-    def draw(self, screen):
-        pygame.draw.rect(screen, (200, 200, 200), self.rect, border_radius=10)
-        text_surface = pygame.font.Font(None, 36).render(self.text, True, (0, 0, 0))
+    def draw(self, screen, button_color, border_color, text_color):
+        pygame.draw.rect(screen, button_color, self.rect, border_radius=5)
+        pygame.draw.rect(screen, border_color, self.rect, 2)
+        text_surface = pygame.font.Font(None, 18).render(self.text, True, text_color)
         screen.blit(text_surface, (self.rect.x + 10, self.rect.y + 10))
 
     def is_clicked(self, mouse_pos):
         return self.rect.collidepoint(mouse_pos)
 
 
+# Show a random event and check for correct answer
 def show_random_event(screen):
     event = random.choice(events)
     question_text = event["question"]
     choices = event["choices"]
     correct_choice = event["correct"]
 
-    # Colors for Abbott Elementary pixel art vibe
+    # Colors for pixel art vibe
     background_color = (240, 240, 215)  # Light tan background
-    button_color = (255, 223, 186)  # Warm peach button color
-    button_hover_color = (255, 200, 150)  # Slightly darker on hover
+    button_color = (255, 223, 186)  # Warm peach button
+    border_color = (0, 0, 0)  # Black border for buttons
     text_color = (50, 50, 50)  # Dark gray text
+    result_color_correct = (0, 200, 0)  # Green for correct
+    result_color_incorrect = (200, 0, 0)  # Red for incorrect
 
-    # Clear screen and set background
+    # Draw background and keep main game visible
     screen.fill(background_color)
 
-    # Draw pixel-style border around the event pop-up
-    border_color = (0, 0, 0)
-    border_rect = pygame.Rect(40, 40, 720, 500)
-    pygame.draw.rect(screen, border_color, border_rect, 5)
+    # Pop-up dimensions
+    popup_width = 600
+    popup_height = 400
+    popup_x = (800 - popup_width) // 2
+    popup_y = (600 - popup_height) // 2
 
-    # Draw event pop-up background
-    event_rect = pygame.Rect(50, 50, 700, 480)
-    pygame.draw.rect(screen, background_color, event_rect)
+    # Draw pop-up background with border
+    pygame.draw.rect(screen, (0, 0, 0), (popup_x - 5, popup_y - 5, popup_width + 10, popup_height + 10))  # Border
+    pygame.draw.rect(screen, background_color, (popup_x, popup_y, popup_width, popup_height))  # Pop-up background
 
-    # Draw question at the top
-    question_surface = pygame.font.Font(None, 36).render(question_text, True, text_color)
-    screen.blit(question_surface, (60, 70))
+    # Draw question at the top, centered
+    question_surface = pygame.font.Font(None, 20).render(question_text, True, text_color)
+    question_rect = question_surface.get_rect(center=(popup_x + popup_width // 2, popup_y + 40))
+    screen.blit(question_surface, question_rect)
 
     # Create buttons with pixel art vibe
     buttons = []
     choice_letters = ["A", "B", "C", "D"]
     for i, choice in enumerate(choices):
-        button_rect = pygame.Rect(60, 150 + i * 80, 680, 60)
-        pygame.draw.rect(screen, button_color, button_rect, border_radius=5)
-        button_text = pygame.font.Font(None, 28).render(choice, True, text_color)
-        screen.blit(button_text, (button_rect.x + 10, button_rect.y + 15))
-        
-        # Create button instance and add to list
+        button_rect = pygame.Rect(popup_x + 50, popup_y + 100 + i * 60, popup_width - 100, 40)
         button = Button(choice, button_rect.x, button_rect.y, button_rect.width, button_rect.height, choice_letters[i])
         buttons.append(button)
+        button.draw(screen, button_color, border_color, text_color)
 
     pygame.display.flip()
 
@@ -140,23 +140,17 @@ def show_random_event(screen):
                 for button in buttons:
                     if button.is_clicked(mouse_pos):
                         choice_made = True
-                        check_answer(screen, button.choice, correct_choice)  # Check correctness
+                        if button.choice == correct_choice:
+                            result_text = "Correct! You handled it well."
+                            result_color = result_color_correct
+                        else:
+                            result_text = f"Wrong! Correct answer was {correct_choice}."
+                            result_color = result_color_incorrect
+
+                        # Show result at the bottom of the pop-up
+                        result_surface = pygame.font.Font(None, 20).render(result_text, True, result_color)
+                        screen.blit(result_surface, (popup_x + 50, popup_y + popup_height - 40))
+                        pygame.display.flip()
+
+                        time.sleep(2)  # Pause for 2 seconds before returning
                         return
-
-# Check if the selected choice is correct
-def check_answer(screen, selected_choice, correct_choice):
-    screen.fill((255, 255, 255))  # Clear screen
-
-    if selected_choice == correct_choice:
-        result_text = "Correct! You handled it well!"
-        color = (0, 200, 0)
-    else:
-        result_text = f"Wrong! Correct answer was {correct_choice}."
-        color = (200, 0, 0)
-
-    result_surface = pygame.font.Font(None, 36).render(result_text, True, color)
-    screen.blit(result_surface, (50, 300))
-    pygame.display.flip()
-
-    time.sleep(2)  # Pause for 2 seconds before returning
-    return

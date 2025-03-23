@@ -2,7 +2,7 @@ import pygame
 import sys
 import random
 from scenario import popscene1
-# from mini_games.math_mini_game import run_math_game
+from mini_games.math_mini_game import run_math_game
 from mini_games.read_mini_game import run_read_game
 from pop_up import show_random_event
 
@@ -64,7 +64,7 @@ class_table_5 = pygame.Rect(515, 100, 80, 100)  # Table 5 (Orange chair)
 task_tables = [class_table_1, class_table_2, class_table_3, class_table_4, class_table_5]
 
 def draw_progress_bar():
-    bar_y = height - 70  # Higher position (not glued to bottom)
+    bar_y = height - 50  # Higher position (not glued to bottom)
     
     # Draw progress bar
     screen.blit(progress_bar, (75, bar_y))
@@ -79,10 +79,35 @@ def draw_progress_bar():
 # Table states (list of dictionaries)
 # Initialize all tables with a random cooldown between 15 and 45 seconds
 # Set sprite_index to 4 (no sprite displayed initially)
-table_states = [
-    {"rect": table, "clickable": False, "timer": 0, "sprite_index": 4, "cooldown": random.randint(5, 45), "addressed": False, "health_decreased": False}
-    for table in student_tables + task_tables
+task_table_states = [
+    {
+        "rect": table,
+        "clickable": True,  # Always clickable
+        "timer": 0,
+        "sprite_index": 4,
+        "cooldown": 0,  # No cooldown
+        "addressed": False,
+        "health_decreased": False
+    }
+    for table in task_tables
 ]
+
+# Student table states (original behavior)
+student_table_states = [
+    {
+        "rect": table,
+        "clickable": False,
+        "timer": 0,
+        "sprite_index": 4,
+        "cooldown": random.randint(5, 45),
+        "addressed": False,
+        "health_decreased": False
+    }
+    for table in student_tables
+]
+
+# Combine into main table states list
+table_states = student_table_states + task_table_states
 
 # Load the timer sprites
 timer_sprites = [
@@ -199,6 +224,8 @@ def go_to_next_screen(table_number):
 
     if table_number == 10:  # class_table_2
         run_math_game(screen, width, height)
+    elif table_number == 11:
+        run_read_game(screen, width)
     else:
         runs1 = random.randint(1, 8)
         scenario, options = popscene1(runs1)
@@ -236,12 +263,18 @@ while running:
                     state["sprite_index"] = 4  # Reset the sprite index to unclickable
                     state["cooldown"] = random.randint(15, 45)  # Start cooldown period (15-45 seconds)
                     state["addressed"] = True  # Mark the table as addressed
+                    progress += 10  # Increment progress after completing a task table
+                    if progress > max_progress:
+                        progress = max_progress
                     break
     
     event_timer -= dt
     if event_timer <= 0:
         show_random_event(screen)  # Show random event pop-up
         event_timer = random.randint(15, 30)
+        progress += 5  # Increment progress after a random event
+        if progress > max_progress:
+            progress = max_progress
     
     # Update table states
     for state in table_states:
@@ -288,7 +321,6 @@ while running:
         screen.blit(health_images[health], (10, 10))  # Display health image in the top-left corner
 
     # Update the display
-    # screen.blit(health_images[min(0, health)], (0, 10))
     draw_progress_bar()
     pygame.display.flip()
 

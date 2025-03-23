@@ -1,11 +1,21 @@
 import pygame
 import random
 import requests
+import json
+import subprocess
 import itertools  # Ensure this is imported
 
 # WordsAPI details (sign up for an API key at https://www.wordsapi.com/)
 API_KEY = 'eaec32556bmsh376df1c06bc17bap1a5c3ajsn5c63b63563ef'
 BASE_URL = 'https://wordsapiv1.p.rapidapi.com/words/'
+
+# Define color variables for easy customization
+BEIGE = (229, 202, 172)
+CHECK_BUTTON_COLOR = (238,221,195)  # white-tanish
+CHECK_BUTTON_TEXT_COLOR = (184, 136, 100)  # brown
+
+REGENERATE_BUTTON_COLOR = (184, 136, 100)  # brown
+REGENERATE_BUTTON_TEXT_COLOR = (225, 225, 255) #white
 
 # Function to generate random letters that can form at least one valid word
 def generate_letters():
@@ -70,12 +80,17 @@ def handle_input(event, input_text):
             input_text += event.unicode  # Add character to input text
     return input_text
 
-# Function to create a button (for the regenerate action)
-def create_button(screen, text, font, x, y, width, height):
-    button_rect = pygame.Rect(x, y, width, height)
-    pygame.draw.rect(screen, (184,136,100), button_rect)  # button color
-    text_surface = font.render(text, True, (255, 255, 255))
-    screen.blit(text_surface, (x + (width - text_surface.get_width()) // 2, y + (height - text_surface.get_height()) // 2))
+# Function to create a button (for the 'Regenerate Letters' and 'Check on Classroom' actions)
+def create_button(screen, text, font, x, y, padding, button_color, text_color):
+    # Calculate the size of the text and add padding
+    text_surface = font.render(text, True, text_color)
+    button_width = text_surface.get_width() + padding * 2  # Add padding to both sides of the text
+    button_height = text_surface.get_height() + padding * 2  # Add padding to top and bottom
+
+    button_rect = pygame.Rect(x, y, button_width, button_height)
+    pygame.draw.rect(screen, button_color, button_rect)  # button color
+    screen.blit(text_surface, (x + (button_width - text_surface.get_width()) // 2, y + (button_height - text_surface.get_height()) // 2))  # Center the text
+
     return button_rect
 
 # Function to wrap text into multiple lines based on the screen width
@@ -100,6 +115,20 @@ def wrap_text(text, font, screen_width):
     
     return lines
 
+# Function to create a button (for the 'Regenerate Letters' and 'Check on Classroom' actions)
+def create_button(screen, text, font, x, y, width, height, button_color, text_color):
+    button_rect = pygame.Rect(x, y, width, height)
+    pygame.draw.rect(screen, button_color, button_rect)  # button color
+    text_surface = font.render(text, True, text_color)  # Use the specified text color
+    screen.blit(text_surface, (x + (width - text_surface.get_width()) // 2, y + (height - text_surface.get_height()) // 2))
+    return button_rect
+
+# Function to save the score to a JSON file
+def save_score(score):
+    data = {"score": score}
+    with open("jsons/read_mini_game_data.json", "w") as file:  # Save to read_mini_game_data.json
+        json.dump(data, file)
+
 # Main method to run the word game
 def run_read_game(screen, width):
     score = 0
@@ -108,6 +137,7 @@ def run_read_game(screen, width):
     font_large = pygame.font.Font('assets/fonts/Jersey_25/Jersey25-Regular.ttf', 50)
     font_small = pygame.font.Font('assets/fonts/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf', 30)
     font_instructions = pygame.font.Font('assets/fonts/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf', 28)  # Font for instructions
+    font_check_button = pygame.font.Font('assets/fonts/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf', 28)
 
     letters = generate_letters()  # Generate letters that can form a word
  
@@ -121,6 +151,12 @@ def run_read_game(screen, width):
 
     # Wrap the instruction text
     wrapped_instructions = wrap_text(instructions_text, font_instructions, width)
+
+    # Adjust the y position for the "Check on Classroom" button to avoid clipping
+    check_button_y_position = height - 20  # Place it a bit higher to ensure it doesn't get clipped
+
+    # Adjust the x-position for the "Check on Classroom" button to prevent it from being clipped on the left
+    check_button_x_position = 0  # Give it a margin from the left sid
 
     while running_game:
         screen.fill((255, 255, 255))
@@ -174,11 +210,18 @@ def run_read_game(screen, width):
             screen.blit(word_text, (480, 400 + (i * 30)))
 
         # Display regenerate button and handle click
-        button_width = 300  # The width of the button
+        button_width = 300
         x_position = (width - button_width) // 2  
-        regenerate_button_rect = create_button(screen, "Regenerate Letters", font_small, x_position, 500, 350, 50)
+        regenerate_button_rect = create_button(screen, "Regenerate Letters", font_small, x_position, 500, 350, 50, REGENERATE_BUTTON_COLOR, REGENERATE_BUTTON_TEXT_COLOR)
         if regenerate_button_rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
             letters = generate_letters()  # Regenerate letters when clicked
+
+        # Display "Check on Classroom" button and handle click
+        check_button_rect = create_button(screen, "Check on Classroom", font_check_button, check_button_x_position, check_button_y_position, 300, 20, CHECK_BUTTON_COLOR, CHECK_BUTTON_TEXT_COLOR)  # Adjusted y-position and padding
+        if check_button_rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+            save_score(score)  # Save score to JSON file
+            pygame.quit()  # Close the current game window
+            subprocess.run(["python", "game101.py"])  # Run game101.py script to return to that game
 
         # Event handling for user input
         for event in pygame.event.get():
