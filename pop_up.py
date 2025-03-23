@@ -84,25 +84,46 @@ class Button:
         return self.rect.collidepoint(mouse_pos)
 
 
-# Show a random event and check for correct answer
 def show_random_event(screen):
     event = random.choice(events)
     question_text = event["question"]
     choices = event["choices"]
     correct_choice = event["correct"]
 
-    # Display question and choices
-    screen.fill((255, 255, 255))  # Clear screen
+    # Colors for Abbott Elementary pixel art vibe
+    background_color = (240, 240, 215)  # Light tan background
+    button_color = (255, 223, 186)  # Warm peach button color
+    button_hover_color = (255, 200, 150)  # Slightly darker on hover
+    text_color = (50, 50, 50)  # Dark gray text
 
-    question_surface = pygame.font.Font(None, 28).render(question_text, True, (0, 0, 0))
-    screen.blit(question_surface, (50, 50))
+    # Clear screen and set background
+    screen.fill(background_color)
 
+    # Draw pixel-style border around the event pop-up
+    border_color = (0, 0, 0)
+    border_rect = pygame.Rect(40, 40, 720, 500)
+    pygame.draw.rect(screen, border_color, border_rect, 5)
+
+    # Draw event pop-up background
+    event_rect = pygame.Rect(50, 50, 700, 480)
+    pygame.draw.rect(screen, background_color, event_rect)
+
+    # Draw question at the top
+    question_surface = pygame.font.Font(None, 36).render(question_text, True, text_color)
+    screen.blit(question_surface, (60, 70))
+
+    # Create buttons with pixel art vibe
     buttons = []
     choice_letters = ["A", "B", "C", "D"]
     for i, choice in enumerate(choices):
-        button = Button(choice, 50, 150 + i * 60, 700, 50, choice_letters[i])
+        button_rect = pygame.Rect(60, 150 + i * 80, 680, 60)
+        pygame.draw.rect(screen, button_color, button_rect, border_radius=5)
+        button_text = pygame.font.Font(None, 28).render(choice, True, text_color)
+        screen.blit(button_text, (button_rect.x + 10, button_rect.y + 15))
+        
+        # Create button instance and add to list
+        button = Button(choice, button_rect.x, button_rect.y, button_rect.width, button_rect.height, choice_letters[i])
         buttons.append(button)
-        button.draw(screen)
 
     pygame.display.flip()
 
@@ -121,7 +142,6 @@ def show_random_event(screen):
                         choice_made = True
                         check_answer(screen, button.choice, correct_choice)  # Check correctness
                         return
-
 
 # Check if the selected choice is correct
 def check_answer(screen, selected_choice, correct_choice):
