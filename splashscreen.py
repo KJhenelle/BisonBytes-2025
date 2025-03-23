@@ -54,7 +54,7 @@ def splash_screen():
                     running = False  # Exit the splash screen loop
                     
                     # Start the game by running game101.py in a separate process
-                    subprocess.Popen(["python", "game101.py"])
+                    subprocess.Popen(["python3", "game101.py"])
                     break
         
         pygame.display.flip()

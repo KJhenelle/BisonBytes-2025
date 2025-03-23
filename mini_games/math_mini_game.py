@@ -48,7 +48,7 @@ def run_math_game(screen, width, height):
         for i in range(3)
     ]
 
-    classroom_button = pygame.Rect(20, height - 80, 200, 50)
+    classroom_button = pygame.Rect(50, height - 140, 200, 50)
 
     running_game = True
     while running_game and time.time() - start_time < 30:
@@ -86,16 +86,19 @@ def run_math_game(screen, width, height):
             choice_text = font_small.render(str(choices[i]), True, (0, 0, 0))
             screen.blit(choice_text, (rect.x + 75, rect.y + 15))
 
-        pygame.draw.rect(screen, (200, 200, 255), classroom_button, border_radius=10)
-        pygame.draw.rect(screen, (0, 0, 100), classroom_button, 2, border_radius=10)
-        class_text = font_small.render("Back", True, (0, 0, 100))
+        class_text = font_small.render("Check on class", True, (255, 255, 255))
+
         screen.blit(class_text, (classroom_button.x + 10, classroom_button.y + 10))
 
         timer = 30 - int(time.time() - start_time)
-        score_text = font_small.render(f"Score: {score}", True, (0, 128, 0))
-        timer_text = font_small.render(f"Time Left: {timer}s", True, (255, 0, 0))
-        screen.blit(score_text, (20, 20))
-        screen.blit(timer_text, (600, 20))
+        font_score = pygame.font.SysFont(None, 45)
+
+        score_text = font_score.render(f"Score: {score}", True, (255, 255, 255))
+        timer_text = font_score.render(f"Time Left: {timer}s", True, (255, 255, 255))
+
+        screen.blit(score_text, (60, 70))
+        screen.blit(timer_text, (width - timer_text.get_width() - 60, 70))
+
 
         pygame.display.flip()
         pygame.time.Clock().tick(60)

@@ -182,14 +182,26 @@ def wrap_text(text, font, max_width):
         lines.append(current_line)
     return lines
 
+# Load the checklist background image
+checklist_background = pygame.image.load("assets/background/check_back.png").convert_alpha()
+checklist_background = pygame.transform.scale(checklist_background, (200, 200))  # Adjust size as needed
+
 def draw_task_checklist():
-    font = pygame.font.Font(None, 24)
-    checklist_x = width - 200  # Position the checklist on the right side of the screen
+    # Position and size of the checklist
+    checklist_x = width - 220  # Position the checklist on the right side of the screen
     checklist_y = 50
+    checklist_width = 200  # Width of the checklist background
+    checklist_height = 200  # Height of the checklist background
+
+    # Draw the checklist background
+    screen.blit(checklist_background, (checklist_x, checklist_y))
+
+    # Draw the checklist text on top of the background
+    font = pygame.font.Font(None, 24)
     for i, completed in enumerate(task_checklist):
         task_text = f"Task {i + 9}: {'✓' if completed else '✗'}"
         text_surface = font.render(task_text, True, (255, 255, 255))  # White text
-        screen.blit(text_surface, (checklist_x, checklist_y + i * 30))
+        screen.blit(text_surface, (checklist_x + 10, checklist_y + 10 + i * 30))  # Add padding
 
 # Function to display the scenario and options
 def show_scenario_screen(scenario, options, table_number):
@@ -362,7 +374,9 @@ while running:
                     state["cooldown"] = random.randint(15, 45)  # Start cooldown period (15-45 seconds)
                     state["addressed"] = True  # Mark the table as addressed
                     break
+            
 
+            
             # Check task tables
             for j, state in enumerate(table_states[8:], start=9):  # Continue numbering from 9
                 if state["rect"].collidepoint(mouse_pos) and state["clickable"]:
@@ -370,7 +384,7 @@ while running:
                     state["clickable"] = False  # Make the table non-clickable
                     state["timer"] = 0  # Reset the timer
                     state["sprite_index"] = 4  # Reset the sprite index to unclickable
-                    state["cooldown"] = random.randint(1000, 4000)  # Start cooldown period (15-45 seconds)
+                    state["cooldown"] = random.randint(100, 400)  # Start cooldown period (15-45 seconds)
                     state["addressed"] = True  # Mark the table as addressed
                     progress += 10  # Increment progress after completing a task table
                     if progress > max_progress:
