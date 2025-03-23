@@ -88,7 +88,7 @@ def run_math_game(screen, width, height):
 
         pygame.draw.rect(screen, (200, 200, 255), classroom_button, border_radius=10)
         pygame.draw.rect(screen, (0, 0, 100), classroom_button, 2, border_radius=10)
-        class_text = font_small.render("Check on classroom", True, (0, 0, 100))
+        class_text = font_small.render("Back", True, (0, 0, 100))
         screen.blit(class_text, (classroom_button.x + 10, classroom_button.y + 10))
 
         timer = 30 - int(time.time() - start_time)
