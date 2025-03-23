@@ -55,6 +55,36 @@ timer_sprites = [
 ]
 clickable_sprite = pygame.image.load("assets/background/sprite_4.png").convert_alpha()
 
+# Update table states
+for state in table_states:
+    if state["clickable"]:
+        # Update the timer
+        state["timer"] += dt
+        if state["timer"] >= 5:  # 1.25 seconds per sprite (5 seconds total)
+            state["timer"] = 0  # Reset the timer
+            state["sprite_index"] += 1  # Move to the next sprite
+
+            # If the sprite index reaches 3, make the table unclickable
+            if state["sprite_index"] >= 3:
+                state["clickable"] = False
+                state["sprite_index"] = 3  # Keep the sprite at index 3
+    else:
+        # Randomly make a table clickable
+        if random.random() < 0.01:  # 1% chance per frame
+            state["clickable"] = True
+            state["timer"] = 0
+            state["sprite_index"] = 0
+
+# Draw tables with appropriate sprites
+for state in table_states:
+    if state["clickable"]:
+        # Display the clickable sprite
+        screen.blit(clickable_sprite, state["rect"].topleft)
+    else:
+        # Randomly decide whether to display a timer sprite
+        if random.random() < 0.8:  # 80% chance to display a sprite
+            sprite_index = min(int(state["sprite_index"]), 3)
+            screen.blit(timer_sprites[sprite_index], state["rect"].topleft)
 # Function to wrap text so it doesn't run off the screen
 def wrap_text(text, font, max_width):
     words = text.split(" ")

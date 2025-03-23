@@ -3,7 +3,7 @@ import random
 import requests
 
 # WordsAPI details (sign up for an API key at https://www.wordsapi.com/)
-API_KEY = 'YOUR_API_KEY'
+API_KEY = 'eaec32556bmsh376df1c06bc17bap1a5c3ajsn5c63b63563ef'
 BASE_URL = 'https://wordsapiv1.p.rapidapi.com/words/'
 
 # Function to generate random letters
@@ -96,5 +96,5 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Word Game")
     
-    run_word_game(screen, width, height)
+    run_read_game(screen, width, height)
     pygame.quit()

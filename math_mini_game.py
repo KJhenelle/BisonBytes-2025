@@ -2,10 +2,7 @@ import pygame
 import random
 import sys
 import time
-
-background = pygame.image.load("assets/background/chalk_backgrd.jpg")
-background = background.convert()
-background = pygame.transform.scale(background, (width, height))
+import os
 
 def generate_question():
     ops = ['+', '-', '*']
@@ -23,12 +20,10 @@ def generate_question():
     question = f"{a} {op} {b}"
     return question, result
 
-
-
 def run_math_game(screen, width, height):
-    # background = pygame.image.load("assets/background/chalk_backgrd.jpg")
-    # background = background.convert()
-    # background = pygame.transform.scale(background, (width, height))
+    background = pygame.image.load("assets/background/chalkboard.png")
+    background = background.convert()
+    background = pygame.transform.scale(background, (width, height))
 
     score = 0
     start_time = time.time()
