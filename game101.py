@@ -4,6 +4,7 @@ import random
 from scenario import popscene1
 from mini_games.math_mini_game import run_math_game
 from mini_games.read_mini_game import run_read_game
+from mini_games.comp_mini_game import run_typing_game
 from pop_up import show_random_event
 
 # Initialize Pygame
@@ -59,7 +60,7 @@ class_table_1 = pygame.Rect(95, 470, 125, 100)  # Table 1 (bottom left computer)
 class_table_2 = pygame.Rect(260, 470, 125, 100)  # Table 2 (bottom left student)
 class_table_3 = pygame.Rect(425, 470, 125, 100)  # Table 3 (bottom right student)
 class_table_4 = pygame.Rect(305, 120, 200, 125)  # Table 4 (teacher table)
-class_table_5 = pygame.Rect(515, 100, 80, 100)  # Table 5 (Orange chair)
+class_table_5 = pygame.Rect(515, 100, 80, 100)  # Table 5 (TV)
 
 task_tables = [class_table_1, class_table_2, class_table_3, class_table_4, class_table_5]
 
@@ -225,11 +226,74 @@ def go_to_next_screen(table_number):
     if table_number == 10:  # class_table_2
         run_math_game(screen, width, height)
     elif table_number == 11:
-        run_read_game(screen, width)
+        run_read_game(screen, width, height)
+    elif table_number == 9:
+        run_typing_game(screen, width, height)
     else:
         runs1 = random.randint(1, 8)
         scenario, options = popscene1(runs1)
         show_scenario_screen(scenario, options, table_number)
+
+
+# Load the game over image
+game_over_image = pygame.image.load("assets/background/game_over.png").convert_alpha()
+game_over_image = pygame.transform.scale(game_over_image, (width, height))  # Scale to fit the screen
+
+# Define the button area (e.g., a "Restart" button on the game over screen)
+button_rect = pygame.Rect(300, 400, 200, 50)  # Example: (x, y, width, height)
+
+# Load the completed screen image
+completed_image = pygame.image.load("assets/background/game_over.png").convert_alpha()
+completed_image = pygame.transform.scale(completed_image, (width, height))  # Scale to fit the screen
+
+# Define the button area (e.g., a "Play Again" button on the completed screen)
+completed_button_rect = pygame.Rect(300, 400, 200, 50)  # Example: (x, y, width, height)
+
+def draw_completed_screen():
+    # Draw the completed screen image
+    screen.blit(completed_image, (0, 0))
+    
+    # Draw the button (optional: highlight the button area)
+    pygame.draw.rect(screen, (0, 255, 0), completed_button_rect, 2)  # Green outline for the button
+    
+    # Update the display
+    pygame.display.flip()
+
+def completed_loop():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if completed_button_rect.collidepoint(mouse_pos):
+                    # Restart the game
+                    return True  # Return True to indicate a restart
+        draw_completed_screen()
+
+def draw_game_over_screen():
+    # Draw the game over image
+    screen.blit(game_over_image, (0, 0))
+    
+    # Draw the button (optional: highlight the button area)
+    pygame.draw.rect(screen, (255, 0, 0), button_rect, 2)  # Red outline for the button
+    
+    # Update the display
+    pygame.display.flip()
+
+def game_over_loop():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if button_rect.collidepoint(mouse_pos):
+                    # Restart the game
+                    return True  # Return True to indicate a restart
+        draw_game_over_screen()
 
 # Main game loop
 running = True
@@ -327,7 +391,38 @@ while running:
     # Check if health reaches 0
     if health <= 0:
         print("Game Over! Health reached 0.")
-        running = False
+        restart = game_over_loop()  # Show the game over screen
+        if restart:
+            # Reset the game state
+            health = 5
+            progress = 0
+            for state in table_states:
+                state["clickable"] = False
+                state["timer"] = 0
+                state["sprite_index"] = 4
+                state["cooldown"] = random.randint(15, 45)
+                state["addressed"] = False
+                state["health_decreased"] = False
+        else:
+            running = False
+
+    # Check if progress reaches max_progress
+    if progress >= max_progress:
+        print("Congratulations! You completed the game.")
+        restart = completed_loop()  # Show the completed screen
+        if restart:
+            # Reset the game state
+            health = 5
+            progress = 0
+            for state in table_states:
+                state["clickable"] = False
+                state["timer"] = 0
+                state["sprite_index"] = 4
+                state["cooldown"] = random.randint(15, 45)
+                state["addressed"] = False
+                state["health_decreased"] = False
+        else:
+            running = False
 
 # Quit Pygame
 pygame.quit()
