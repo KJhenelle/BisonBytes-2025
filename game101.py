@@ -1,6 +1,7 @@
 import pygame
 import sys
 import random
+import os
 from scenario import popscene1
 from mini_games.math_mini_game import run_math_game
 from mini_games.read_mini_game import run_read_game
@@ -21,6 +22,19 @@ background = background.convert()
 
 # Scale the background image to fit the window
 background = pygame.transform.scale(background, (width, height))
+
+#Load fonts for mini games
+try:
+    font1 = pygame.font.Font(os.path.join('assets', 'fonts', 'Jersey_25', 'Jersey25-Regular.ttf'), 50)
+except Exception as e:
+    print("⚠️ Failed to load font1 (Jersey_25):", e)
+    font1 = pygame.font.SysFont(None, 50)
+
+try:
+    font2 = pygame.font.Font(os.path.join('assets', 'fonts', 'Pixelify_Sans', 'static', 'PixelifySans-Regular.ttf'), 30)
+except Exception as e:
+    print("⚠️ Failed to load font2 (Pixelify):", e)
+    font2 = pygame.font.SysFont(None, 30)
 
 
 progress_bar = pygame.transform.scale(
@@ -226,7 +240,7 @@ def go_to_next_screen(table_number):
     if table_number == 10:  # class_table_2
         run_math_game(screen, width, height)
     elif table_number == 11:
-        run_read_game(screen, width)
+        run_read_game(screen, width, height, font1, font2)
     elif table_number == 9:
         run_typing_game(screen, width, height)
     else:
