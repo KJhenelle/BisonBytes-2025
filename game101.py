@@ -15,7 +15,7 @@ pygame.init()
 # Set up the display
 width, height = 800, 600  # Window size
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Classroom Game")
+pygame.display.set_caption("Classroom Chaos")
 
 # Load the background image
 background = pygame.image.load("assets/background/classroom_chaos_main_background.png")
