@@ -45,46 +45,15 @@ task_tables = [class_table_1, class_table_2, class_table_3, class_table_4, class
 
 # Table states (list of dictionaries)
 table_states = [
-    {"rect": table, "clickable": False, "timer": 0, "sprite_index": 0}
+    {"rect": table, "clickable": False, "timer": 0, "sprite_index": 4, "cooldown": 0}
     for table in student_tables + task_tables
 ]
 
 # Load the timer sprites
 timer_sprites = [
-    pygame.image.load(f"assets/background/sprite_{i}.png").convert_alpha() for i in range(4)
+    pygame.image.load(f"assets/background/sprite_{i}.png").convert_alpha() for i in range(5)
 ]
-clickable_sprite = pygame.image.load("assets/background/sprite_4.png").convert_alpha()
 
-# Update table states
-for state in table_states:
-    if state["clickable"]:
-        # Update the timer
-        state["timer"] += dt
-        if state["timer"] >= 5:  # 1.25 seconds per sprite (5 seconds total)
-            state["timer"] = 0  # Reset the timer
-            state["sprite_index"] += 1  # Move to the next sprite
-
-            # If the sprite index reaches 3, make the table unclickable
-            if state["sprite_index"] >= 3:
-                state["clickable"] = False
-                state["sprite_index"] = 3  # Keep the sprite at index 3
-    else:
-        # Randomly make a table clickable
-        if random.random() < 0.01:  # 1% chance per frame
-            state["clickable"] = True
-            state["timer"] = 0
-            state["sprite_index"] = 0
-
-# Draw tables with appropriate sprites
-for state in table_states:
-    if state["clickable"]:
-        # Display the clickable sprite
-        screen.blit(clickable_sprite, state["rect"].topleft)
-    else:
-        # Randomly decide whether to display a timer sprite
-        if random.random() < 0.8:  # 80% chance to display a sprite
-            sprite_index = min(int(state["sprite_index"]), 3)
-            screen.blit(timer_sprites[sprite_index], state["rect"].topleft)
 # Function to wrap text so it doesn't run off the screen
 def wrap_text(text, font, max_width):
     words = text.split(" ")
@@ -168,8 +137,6 @@ def go_to_next_screen(table_number):
 
     if table_number == 10:  # class_table_2
         run_math_game(screen, width, height)
-    elif table_number == 11:  # class_table_3
-        run_read_game(screen, width)
     else:
         runs1 = random.randint(1, 8)
         scenario, options = popscene1(runs1)
@@ -192,7 +159,8 @@ while running:
                     go_to_next_screen(i)
                     state["clickable"] = False  # Make the table non-clickable
                     state["timer"] = 0  # Reset the timer
-                    state["sprite_index"] = 0  # Reset the sprite index
+                    state["sprite_index"] = 4  # Reset the sprite index to unclickable
+                    state["cooldown"] = 5  # Start cooldown period (5 seconds)
                     break
 
             # Check task tables
@@ -201,37 +169,53 @@ while running:
                     go_to_next_screen(j)
                     state["clickable"] = False  # Make the table non-clickable
                     state["timer"] = 0  # Reset the timer
-                    state["sprite_index"] = 0  # Reset the sprite index
+                    state["sprite_index"] = 4  # Reset the sprite index to unclickable
+                    state["cooldown"] = 5  # Start cooldown period (5 seconds)
                     break
 
     # Update table states
     for state in table_states:
-        if state["clickable"]:
-            # Update the timer
+        if state["cooldown"] > 0:
+            # Cooldown period: no sprite is displayed, and the table is unclickable
+            state["cooldown"] -= dt
+            if state["cooldown"] <= 0:
+                state["cooldown"] = 0  # End cooldown
+        elif state["clickable"]:
+            # Update the timer during the sprite cycle
             state["timer"] += dt
-            if state["timer"] >= 5:  # 5 seconds elapsed
-                state["clickable"] = False
+            if state["timer"] >= 5:  # 5 seconds per sprite
                 state["timer"] = 0
-                state["sprite_index"] = 0
+                state["sprite_index"] += 1  # Move to the next sprite
+
+                # If the sprite index reaches 4, start cooldown
+                if state["sprite_index"] >= 4:
+                    state["clickable"] = False
+                    state["sprite_index"] = 4  # Keep the sprite at index 4
+                    state["cooldown"] = 5  # Start cooldown period (5 seconds)
         else:
-            # Randomly make a table clickable
-            if random.random() < 0.01:  # 1% chance per frame
+            # Randomly make a table clickable (only for student tables)
+            if state["rect"] in student_tables and random.random() < 0.01:  # 1% chance per frame
                 state["clickable"] = True
                 state["timer"] = 0
-                state["sprite_index"] = 0
+                state["sprite_index"] = 0  # Start with sprite_0
 
     # Draw the background image
     screen.blit(background, (0, 0))
 
-    # Draw clickable tables with appropriate sprites
+    # Draw tables with appropriate sprites (only for student tables)
     for state in table_states:
-        if state["clickable"]:
-            # Display the clickable sprite
-            screen.blit(clickable_sprite, state["rect"].topleft)
-        else:
-            # Display the timer sprite
-            sprite_index = min(int(state["timer"]), 3)
-            screen.blit(timer_sprites[sprite_index], state["rect"].topleft)
+        if state["rect"] in student_tables:
+            if state["cooldown"] > 0:
+                # Cooldown period: no sprite is displayed
+                pass
+            elif state["clickable"]:
+                # Display the current sprite (sprite_0, sprite_1, sprite_2, or sprite_3)
+                if state["sprite_index"] < 4:
+                    screen.blit(timer_sprites[state["sprite_index"]], state["rect"].topleft)
+            else:
+                # Display sprite_4 (unclickable)
+                if state["sprite_index"] == 4:
+                    screen.blit(timer_sprites[4], state["rect"].topleft)
 
     # Update the display
     pygame.display.flip()

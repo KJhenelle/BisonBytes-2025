@@ -2,7 +2,6 @@ import pygame
 import random
 import sys
 import time
-import os
 
 def generate_question():
     ops = ['+', '-', '*']
@@ -21,10 +20,6 @@ def generate_question():
     return question, result
 
 def run_math_game(screen, width, height):
-    background = pygame.image.load("assets/background/chalkboard.png")
-    background = background.convert()
-    background = pygame.transform.scale(background, (width, height))
-
     score = 0
     start_time = time.time()
     font_large = pygame.font.SysFont(None, 60)
@@ -50,7 +45,7 @@ def run_math_game(screen, width, height):
 
     running_game = True
     while running_game and time.time() - start_time < 30:
-        screen.blit(background, (0, 0))
+        screen.fill((255, 255, 255))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -63,8 +58,12 @@ def run_math_game(screen, width, height):
                     if rect.collidepoint(mouse_pos):
                         if choices[idx] == answer:
                             score += 1
-                        question, answer = generate_question()
-                        choices = create_choices(answer)
+                            if score >= 5:
+                                running_game = False
+                                break  # Stop checking other buttons
+                        if running_game:  # Only update if still playing
+                            question, answer = generate_question()
+                            choices = create_choices(answer)
 
         q_surface = font_large.render(question, True, (0, 0, 0))
         screen.blit(q_surface, (width // 2 - q_surface.get_width() // 2, 150))
@@ -84,8 +83,15 @@ def run_math_game(screen, width, height):
         pygame.display.flip()
         pygame.time.Clock().tick(60)
 
+    # Show final screen
     screen.fill((255, 255, 255))
-    final_text = font_large.render(f"Time's up! Score: {score}", True, (0, 0, 0))
+    if score >= 5:
+        final_msg = "Great job! You got 5 correct answers!"
+    else:
+        final_msg = f"Time's up! Score: {score}"
+    final_text = font_large.render(final_msg, True, (0, 0, 0))
     screen.blit(final_text, (width // 2 - final_text.get_width() // 2, height // 2))
     pygame.display.flip()
     pygame.time.wait(3000)
+
+    return  # So it can return back to the main menu
