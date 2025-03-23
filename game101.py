@@ -399,7 +399,7 @@ while running:
         elif state["clickable"]:
             # Update the timer during the sprite cycle
             state["timer"] += dt
-            if state["timer"] >= 20:  # 5 seconds per sprite
+            if state["timer"] >= 15:  # 15 seconds per sprite
                 state["timer"] = 0
                 state["sprite_index"] += 1  # Move to the next sprite
 
