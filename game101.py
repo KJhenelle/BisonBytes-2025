@@ -188,7 +188,7 @@ checklist_background = pygame.transform.scale(checklist_background, (200, 200)) 
 
 def draw_task_checklist():
     # Position and size of the checklist
-    checklist_x = width - 220  # Position the checklist on the right side of the screen
+    checklist_x = width - 200  # Position the checklist on the right side of the screen
     checklist_y = 50
     checklist_width = 200  # Width of the checklist background
     checklist_height = 200  # Height of the checklist background
@@ -200,8 +200,10 @@ def draw_task_checklist():
     font = pygame.font.Font(None, 24)
     for i, completed in enumerate(task_checklist):
         task_text = f"Task {i + 9}: {'✓' if completed else '✗'}"
-        text_surface = font.render(task_text, True, (255, 255, 255))  # White text
-        screen.blit(text_surface, (checklist_x + 10, checklist_y + 10 + i * 30))  # Add padding
+        text_surface = font.render(task_text, True, (0, 0, 0))  # Black text
+        # Shift text to the right by increasing the x-offset (e.g., +20)
+        screen.blit(text_surface, (checklist_x + 45, checklist_y + 30 + i * 30))  # Adjusted padding
+
 
 # Function to display the scenario and options
 def show_scenario_screen(scenario, options, table_number):
