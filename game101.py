@@ -2,8 +2,8 @@ import pygame
 import sys
 import random
 from scenario import popscene1
-from math_mini_game import run_math_game
-from read_mini_game import run_read_game
+# from mini_games.math_mini_game import run_math_game
+from mini_games.read_mini_game import run_read_game
 from pop_up import show_random_event
 
 # Initialize Pygame
@@ -24,7 +24,7 @@ background = pygame.transform.scale(background, (width, height))
 
 progress_bar = pygame.transform.scale(
     pygame.image.load("assets/background/progress_bar.png").convert_alpha(), 
-    (650, 100)  # Increased width and height
+    (650, 40)  # Increased width and height
 )
 
 progress_sprite = pygame.transform.scale(
@@ -62,78 +62,19 @@ class_table_4 = pygame.Rect(305, 120, 200, 125)  # Table 4 (teacher table)
 class_table_5 = pygame.Rect(515, 100, 80, 100)  # Table 5 (Orange chair)
 
 task_tables = [class_table_1, class_table_2, class_table_3, class_table_4, class_table_5]
-# Progress Bar Dimensions
-PROGRESS_BAR_WIDTH = 700
-PROGRESS_BAR_HEIGHT = 250  # Massive 250px tall bar
-
-# Load and scale assets
-progress_bar = pygame.transform.scale(
-    pygame.image.load("assets/background/progress_bar.png").convert_alpha(),
-    (PROGRESS_BAR_WIDTH, PROGRESS_BAR_HEIGHT)
-)
-
-# Scale sprites to match bar height
-progress_sprite = pygame.transform.scale(
-    pygame.image.load("assets/background/progress_sprite.png").convert_alpha(),
-    (80, 300)  # Very tall moving sprite
-)
-
-end_sprite = pygame.transform.scale(
-    pygame.image.load("assets/background/progress_sprite.png").convert_alpha(),
-    (100, 350)  # Massive end marker
-)
 
 def draw_progress_bar():
-    # Position at bottom with margin
-    bar_y = height - PROGRESS_BAR_HEIGHT - 20
+    bar_y = height - 70  # Higher position (not glued to bottom)
     
-    # Draw background container
-    pygame.draw.rect(screen, (30, 30, 30), 
-                    (45, bar_y - 15, 
-                     PROGRESS_BAR_WIDTH + 10, 
-                     PROGRESS_BAR_HEIGHT + 30),
-                    border_radius=15)
+    # Draw progress bar
+    screen.blit(progress_bar, (75, bar_y))
     
-    # Draw progress bar base
-    screen.blit(progress_bar, (50, bar_y))
+    # Draw end sprite (aligned with bar height)
+    screen.blit(end_sprite, (75 + 650 - 50, bar_y - 5))
     
-    # Animated fill effect
-    fill_width = (progress / max_progress) * PROGRESS_BAR_WIDTH
-    pygame.draw.rect(screen, (50, 150, 70),
-                    (50, bar_y, fill_width, PROGRESS_BAR_HEIGHT),
-                    border_radius=12)
-    
-    # Draw end markers
-    screen.blit(end_sprite, (50 + PROGRESS_BAR_WIDTH - 100, bar_y - 25))
-    
-    # Calculate moving sprite position
-    x_pos = 50 + (progress / max_progress) * (PROGRESS_BAR_WIDTH - 100)
-    screen.blit(progress_sprite, (x_pos, bar_y - 25))
-    
-    # Oversized percentage text
-    font = pygame.font.Font(None, 80)
-    text = font.render(f"{int(progress)}%", True, (255, 255, 255))
-    text_rect = text.get_rect(
-        center=(50 + PROGRESS_BAR_WIDTH//2, 
-                bar_y + PROGRESS_BAR_HEIGHT//2)
-    )
-    # Text shadow
-    shadow = font.render(f"{int(progress)}%", True, (0, 0, 0))
-    screen.blit(shadow, text_rect.move(2, 2))
-    screen.blit(text, text_rect)
-
-# def draw_progress_bar():
-#     bar_y = height - 70  # Higher position (not glued to bottom)
-    
-#     # Draw progress bar
-#     screen.blit(progress_bar, (75, bar_y))
-    
-#     # Draw end sprite (aligned with bar height)
-#     screen.blit(end_sprite, (75 + 650 - 50, bar_y - 5))
-    
-#     # Calculate moving sprite position (centered vertically)
-#     x_pos = 75 + (progress / max_progress) * (650 - 50)
-#     screen.blit(progress_sprite, (x_pos, bar_y - 5))
+    # Calculate moving sprite position (centered vertically)
+    x_pos = 75 + (progress / max_progress) * (650 - 50)
+    screen.blit(progress_sprite, (x_pos, bar_y - 5))
 
 # Table states (list of dictionaries)
 # Initialize all tables with a random cooldown between 15 and 45 seconds
@@ -150,11 +91,26 @@ timer_sprites = [
 
 # Load health images
 health_images = {
-    5: pygame.image.load("assets/background/5.png").convert_alpha(),
-    4: pygame.image.load("assets/background/4-3.png").convert_alpha(),
-    3: pygame.image.load("assets/background/4-3.png").convert_alpha(),
-    2: pygame.image.load("assets/background/2.png").convert_alpha(),
-    1: pygame.image.load("assets/background/1.png").convert_alpha()
+    5: pygame.transform.scale(
+    pygame.image.load("assets/background/5.png").convert_alpha(),
+    (60,50)  # r
+),
+    4: pygame.transform.scale(
+    pygame.image.load("assets/background/4-3.png").convert_alpha(),
+    (60,50)  # r
+),
+    3: pygame.transform.scale(
+    pygame.image.load("assets/background/4-3.png").convert_alpha(),
+    (60,50)  # r
+),
+    2: pygame.transform.scale(
+    pygame.image.load("assets/background/2.png").convert_alpha(),
+    (60,50)  # r
+),
+    1: pygame.transform.scale(
+    pygame.image.load("assets/background/1.png").convert_alpha(),
+    (60,50)  # r
+)
 }
 
 # Initialize health

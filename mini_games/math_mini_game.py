@@ -3,6 +3,8 @@ import random
 import sys
 import time
 
+background = pygame.image.load("assets/background/chalkboard.png")
+
 def generate_question():
     ops = ['+', '-', '*']
     a = random.randint(1, 10)
@@ -45,7 +47,7 @@ def run_math_game(screen, width, height):
 
     running_game = True
     while running_game and time.time() - start_time < 30:
-        screen.fill((255, 255, 255))
+        screen.blit(background, (0, 0))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -84,7 +86,7 @@ def run_math_game(screen, width, height):
         pygame.time.Clock().tick(60)
 
     # Show final screen
-    screen.fill((255, 255, 255))
+    screen.blit(background, (0, 0))
     if score >= 5:
         final_msg = "Great job! You got 5 correct answers!"
     else:
