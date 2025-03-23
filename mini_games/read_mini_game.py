@@ -142,129 +142,108 @@ def run_read_game(screen, width, height, font1, font2):
 
     letters = generate_letters()  # Generate letters that can form a word
  
-    input_text = ""  # Initialize the input text
-    correct_words = []  # List to store correct words
-    incorrect_words = []  # List to store incorrect words
+    input_text = ""  
+    correct_words = []  
+    incorrect_words = []  
     running_game = True
 
-    # Instruction text
     instructions_text = "Use the letters to make words. Press Enter to submit. Click 'Regenerate Letters' to get new ones. Need a 70!"
-
-    # Wrap the instruction text
-    # safe_font = pygame.font.SysFont(None, 28)
     wrapped_instructions = wrap_text(instructions_text, font_instructions, width)
 
-
-    # Adjust the y position for the "Check on Classroom" button to avoid clipping
-    check_button_y_position = height - 20  # Place it a bit higher to ensure it doesn't get clipped
-
-    # Adjust the x-position for the "Check on Classroom" button to prevent it from being clipped on the left
-    check_button_x_position = 0  # Give it a margin from the left sid
+    # Define buttons upfront
+    regenerate_button_rect = pygame.Rect((width - 350) // 2, 500, 350, 50)  # Regenerate button
+    check_button_rect = pygame.Rect(0, height - 40, 300, 30)  # Classroom button
 
     while running_game:
         screen.fill((255, 255, 255))
 
+        # Draw background
         background_image = pygame.image.load('assets/background/classroom_desk.jpeg')
         background_image = pygame.transform.scale(background_image, (width, height))
-        background_rect = background_image.get_rect()  # Get the size of the image for proper positioning
-        screen.blit(background_image, background_rect)
+        screen.blit(background_image, (0, 0))
 
-        # Display wrapped instructions at the top of the screen
+        # Display instructions
         y_offset = 20
         for line in wrapped_instructions:
             instructions_display = font_instructions.render(line, True, (0, 0, 0))
             screen.blit(instructions_display, (20, y_offset))
             y_offset += font_instructions.get_height()
 
-        # Draw the letters on the screen
+        # Draw letters
         letter_text = font_large.render(f"Given letters: {' '.join(letters)}", True, (0, 0, 0))
         screen.blit(letter_text, (width // 2 - letter_text.get_width() // 2, 150))
 
-        # Display the score
+        # Draw score
         score_text = font_small.render(f"Grade: {score}", True, (0, 0, 0))
-        score_rect = pygame.Rect(20, 150, score_text.get_width() + 20, score_text.get_height() + 10)  # Adjust for padding
+        score_rect = pygame.Rect(20, 150, score_text.get_width() + 20, score_text.get_height() + 10)
         pygame.draw.rect(screen, beige, score_rect)
-        screen.blit(score_text, (score_rect.x + 10, score_rect.y + 5))  # Add padding to center the text inside the rectangle
+        screen.blit(score_text, (score_rect.x + 10, score_rect.y + 5))
 
-
-        # Display the input text
+        # Draw input text
         input_text_display = font_small.render(f"Input: {input_text}", True, (0, 0, 0))
         screen.blit(input_text_display, (width // 2 - input_text_display.get_width() // 2, 250))
 
-        # Display correct and incorrect words
-            #correct words
+        # Draw correct/incorrect words
         correct_label = font_small.render("Correct Words:", True, (0, 128, 0))
-        correct_label_rect = pygame.Rect(50, 350, correct_label.get_width() + 20, correct_label.get_height() + 10)  # Background rectangle for the label
-        pygame.draw.rect(screen, beige, correct_label_rect)  # Draw beige background
-        screen.blit(correct_label, (correct_label_rect.x + 10, correct_label_rect.y + 5))  # Blit the label text on top with padding
+        correct_label_rect = pygame.Rect(50, 350, correct_label.get_width() + 20, correct_label.get_height() + 10)
+        pygame.draw.rect(screen, beige, correct_label_rect)
+        screen.blit(correct_label, (correct_label_rect.x + 10, correct_label_rect.y + 5))
 
         for i, word in enumerate(correct_words):
             word_text = font_small.render(word, True, (0, 128, 0))
-            screen.blit(word_text, (50, 400 + (i * 30)))  
+            screen.blit(word_text, (50, 400 + (i * 30)))
     
-            #incorrect words
         incorrect_label = font_small.render("Incorrect Words:", True, (255, 0, 0))
-        incorrect_label_rect = pygame.Rect(480, 350, incorrect_label.get_width() + 20, incorrect_label.get_height() + 10)  # Background rectangle for the label
-        pygame.draw.rect(screen, beige, incorrect_label_rect)  # Draw beige background
-        screen.blit(incorrect_label, (incorrect_label_rect.x + 10, incorrect_label_rect.y + 5))  # Blit the label text on top with padding
+        incorrect_label_rect = pygame.Rect(480, 350, incorrect_label.get_width() + 20, incorrect_label.get_height() + 10)
+        pygame.draw.rect(screen, beige, incorrect_label_rect)
+        screen.blit(incorrect_label, (incorrect_label_rect.x + 10, incorrect_label_rect.y + 5))
 
         for i, word in enumerate(incorrect_words):
             word_text = font_small.render(word, True, (255, 0, 0))
             screen.blit(word_text, (480, 400 + (i * 30)))
 
-        # Display regenerate button and handle click
-        button_width = 300
-        x_position = (width - button_width) // 2  
-        regenerate_button_rect = create_button(screen, "Regenerate Letters", font_small, x_position, 500, 350, 50, REGENERATE_BUTTON_COLOR, REGENERATE_BUTTON_TEXT_COLOR)
-        if regenerate_button_rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
-            letters = generate_letters()  # Regenerate letters when clicked
+        # Draw buttons
+        create_button(screen, "Regenerate Letters", font_small, regenerate_button_rect.x, regenerate_button_rect.y, 350, 50, REGENERATE_BUTTON_COLOR, REGENERATE_BUTTON_TEXT_COLOR)
+        create_button(screen, "Check on Classroom", font_check_button, check_button_rect.x, check_button_rect.y, 300, 30, CHECK_BUTTON_COLOR, CHECK_BUTTON_TEXT_COLOR)
 
-        # Display "Check on Classroom" button and handle click
-        check_button_rect = create_button(screen, "Check on Classroom", font_check_button, check_button_x_position, check_button_y_position, 300, 20, CHECK_BUTTON_COLOR, CHECK_BUTTON_TEXT_COLOR)  # Adjusted y-position and padding
-        if check_button_rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
-            save_score(score)  # Save score to JSON file
-            pygame.quit()  # Close the current game window
-            subprocess.run(["python", "game101.py"])  # Run game101.py script to return to that game
-
-        # Event handling for user input
+        # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
 
-            # Handle user input for typing
+            # Handle text input
             if event.type == pygame.KEYDOWN:
                 input_text = handle_input(event, input_text)
 
-            # Handle "Enter" key to submit the word
+            # Handle Enter key
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 result = check_word(input_text, letters, correct_words)
                 if result == "Correct! +10":
                     score += 10
-                    correct_words.append(input_text.upper())  # Add to correct words
+                    correct_words.append(input_text.upper())
                 else:
-                    incorrect_words.append(input_text.upper())  # Add to incorrect words
-                input_text = ""  # Clear input after submitting
+                    incorrect_words.append(input_text.upper())
+                input_text = ""
 
-        # Check if the player has passed
+            # Handle button clicks
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+
+                # Regenerate Letters
+                if regenerate_button_rect.collidepoint(mouse_pos):
+                    letters = generate_letters()
+
+                # Check on Classroom
+                if check_button_rect.collidepoint(mouse_pos):
+                    save_score(score)
+                    running_game = False  # Exit loop immediately
+                    return  # Return to main menu
+
+        # Check for pass condition
         if score >= 70:
             pass_text = font_large.render("You Passed!", True, (0, 255, 0))
             screen.blit(pass_text, (width // 2 - pass_text.get_width() // 2, 300))
 
-        # Update the screen
         pygame.display.flip()
         pygame.time.Clock().tick(60)
-
-# Initialize Pygame and run the game
-if __name__ == "__main__":
-    pygame.init()
-    width = 800
-    height = 600
-    screen = pygame.display.set_mode((width, height))
-    pygame.display.set_caption("Word Game")
-
-    font1 = pygame.font.Font(os.path.join('assets', 'fonts', 'Jersey_25', 'Jersey25-Regular.ttf'), 50)
-    font2 = pygame.font.Font(os.path.join('assets', 'fonts', 'Pixelify_Sans', 'PixelifySans-VariableFont_wght.ttf'), 30)
-    
-    run_read_game(screen, width, height, font1, font2)
-    pygame.quit()

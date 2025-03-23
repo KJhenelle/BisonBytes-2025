@@ -202,7 +202,7 @@ def show_scenario_screen(scenario, options, table_number):
         pygame.display.flip()
 
         # Wait for a short time (e.g., 2 seconds) before returning to the main screen
-        pygame.time.delay(2000)
+        pygame.time.delay(1000)
         return
 
     # If a scenario is available, proceed as before
@@ -343,7 +343,7 @@ task_checklist = [False] * len(task_tables)  # False means the task is not compl
 # Main game loop
 running = True
 clock = pygame.time.Clock()
-event_timer = random.randint(10, 20)
+event_timer = random.randint(30, 100)
 while running:
     dt = clock.tick(60) / 1000  # Delta time in seconds
 
@@ -370,7 +370,7 @@ while running:
                     state["clickable"] = False  # Make the table non-clickable
                     state["timer"] = 0  # Reset the timer
                     state["sprite_index"] = 4  # Reset the sprite index to unclickable
-                    state["cooldown"] = random.randint(15, 45)  # Start cooldown period (15-45 seconds)
+                    state["cooldown"] = random.randint(1000, 4000)  # Start cooldown period (15-45 seconds)
                     state["addressed"] = True  # Mark the table as addressed
                     progress += 10  # Increment progress after completing a task table
                     if progress > max_progress:
@@ -380,7 +380,7 @@ while running:
     event_timer -= dt
     if event_timer <= 0:
         show_random_event(screen)  # Show random event pop-up
-        event_timer = random.randint(15, 30)
+        event_timer = random.randint(30, 60)
         progress += 5  # Increment progress after a random event
         if progress > max_progress:
             progress = max_progress
@@ -407,6 +407,7 @@ while running:
                 if state["sprite_index"] >= 4 and state["cooldown"] <= 0:
                     if not state["addressed"] and not state["health_decreased"]:
                         health -= 1
+                        print (health)
                         state["health_decreased"] = True
 
     # Draw the background image
