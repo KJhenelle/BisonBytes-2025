@@ -3,6 +3,7 @@ import random
 import requests
 import json
 import subprocess
+import os
 import itertools  # Ensure this is imported
 
 # WordsAPI details (sign up for an API key at https://www.wordsapi.com/)
@@ -130,14 +131,14 @@ def save_score(score):
         json.dump(data, file)
 
 # Main method to run the word game
-def run_read_game(screen, width):
+def run_read_game(screen, width, height, font1, font2):
     score = 0
     beige = (229,202,172)
 
-    font_large = pygame.font.Font('assets/fonts/Jersey_25/Jersey25-Regular.ttf', 50)
-    font_small = pygame.font.Font('assets/fonts/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf', 30)
-    font_instructions = pygame.font.Font('assets/fonts/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf', 28)  # Font for instructions
-    font_check_button = pygame.font.Font('assets/fonts/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf', 28)
+    font_large = font1
+    font_small = font2
+    font_check_button = font2
+    font_instructions = font2
 
     letters = generate_letters()  # Generate letters that can form a word
  
@@ -150,7 +151,9 @@ def run_read_game(screen, width):
     instructions_text = "Use the letters to make words. Press Enter to submit. Click 'Regenerate Letters' to get new ones. Need a 70!"
 
     # Wrap the instruction text
+    # safe_font = pygame.font.SysFont(None, 28)
     wrapped_instructions = wrap_text(instructions_text, font_instructions, width)
+
 
     # Adjust the y position for the "Check on Classroom" button to avoid clipping
     check_button_y_position = height - 20  # Place it a bit higher to ensure it doesn't get clipped
@@ -161,7 +164,7 @@ def run_read_game(screen, width):
     while running_game:
         screen.fill((255, 255, 255))
 
-        background_image = pygame.image.load('classroom_desk.jpeg')
+        background_image = pygame.image.load('assets/background/classroom_desk.jpeg')
         background_image = pygame.transform.scale(background_image, (width, height))
         background_rect = background_image.get_rect()  # Get the size of the image for proper positioning
         screen.blit(background_image, background_rect)
@@ -179,7 +182,7 @@ def run_read_game(screen, width):
 
         # Display the score
         score_text = font_small.render(f"Grade: {score}", True, (0, 0, 0))
-        score_rect = pygame.Rect(20, 100, score_text.get_width() + 20, score_text.get_height() + 10)  # Adjust for padding
+        score_rect = pygame.Rect(20, 150, score_text.get_width() + 20, score_text.get_height() + 10)  # Adjust for padding
         pygame.draw.rect(screen, beige, score_rect)
         screen.blit(score_text, (score_rect.x + 10, score_rect.y + 5))  # Add padding to center the text inside the rectangle
 
@@ -259,6 +262,9 @@ if __name__ == "__main__":
     height = 600
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Word Game")
+
+    font1 = pygame.font.Font(os.path.join('assets', 'fonts', 'Jersey_25', 'Jersey25-Regular.ttf'), 50)
+    font2 = pygame.font.Font(os.path.join('assets', 'fonts', 'Pixelify_Sans', 'PixelifySans-VariableFont_wght.ttf'), 30)
     
-    run_read_game(screen, width)
+    run_read_game(screen, width, height, font1, font2)
     pygame.quit()
