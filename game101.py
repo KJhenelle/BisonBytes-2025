@@ -285,7 +285,7 @@ game_over_image = pygame.transform.scale(game_over_image, (width, height))  # Sc
 button_rect = pygame.Rect(300, 325, 200, 50)  # Example: (x, y, width, height)
 
 # Load the completed screen image
-completed_image = pygame.image.load("assets/background/game_over.png").convert_alpha()
+completed_image = pygame.image.load("assets/background/complete.png").convert_alpha()
 completed_image = pygame.transform.scale(completed_image, (width, height))  # Scale to fit the screen
 
 # Define the button area (e.g., a "Play Again" button on the completed screen)
