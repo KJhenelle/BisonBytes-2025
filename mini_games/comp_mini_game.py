@@ -118,8 +118,8 @@ def run_typing_game(screen, width, height):
         button_rect = draw_button()
         
         # Input area
-        pygame.draw.line(screen, colors["BLACK"], (0, height-60), (width, height-60), 2)
-        pygame.draw.rect(screen, colors["BAR"], (0, height-60, width, 60))
+        pygame.draw.line(screen, colors["BLACK"], (0, height-5), (width, height-5), 2)
+        pygame.draw.rect(screen, colors["BAR"], (0, height-5, width, 60))
         
         input_surf = input_font.render(game_vars["input_text"], True, colors["WHITE"])
         screen.blit(input_surf, (width//2 - input_surf.get_width()//2, height-50))

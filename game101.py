@@ -10,6 +10,7 @@ from pop_up import show_random_event
 # Initialize Pygame
 pygame.init()
 
+
 # Set up the display
 width, height = 800, 600  # Window size
 screen = pygame.display.set_mode((width, height))
@@ -63,6 +64,15 @@ class_table_4 = pygame.Rect(305, 120, 200, 125)  # Table 4 (teacher table)
 class_table_5 = pygame.Rect(515, 100, 80, 100)  # Table 5 (TV)
 
 task_tables = [class_table_1, class_table_2, class_table_3, class_table_4, class_table_5]
+
+def draw_task_checklist():
+    font = pygame.font.Font(None, 24)
+    checklist_x = width - 200  # Position the checklist on the right side of the screen
+    checklist_y = 50
+    for i, completed in enumerate(task_checklist):
+        task_text = f"Task {i + 9}: {'✓' if completed else '✗'}"
+        text_surface = font.render(task_text, True, (255, 255, 255))  # White text
+        screen.blit(text_surface, (checklist_x, checklist_y + i * 30))
 
 def draw_progress_bar():
     bar_y = height - 50  # Higher position (not glued to bottom)
@@ -158,6 +168,15 @@ def wrap_text(text, font, max_width):
         lines.append(current_line)
     return lines
 
+def draw_task_checklist():
+    font = pygame.font.Font(None, 24)
+    checklist_x = width - 200  # Position the checklist on the right side of the screen
+    checklist_y = 50
+    for i, completed in enumerate(task_checklist):
+        task_text = f"Task {i + 9}: {'✓' if completed else '✗'}"
+        text_surface = font.render(task_text, True, (255, 255, 255))  # White text
+        screen.blit(text_surface, (checklist_x, checklist_y + i * 30))
+
 # Function to display the scenario and options
 def show_scenario_screen(scenario, options, table_number):
     if not scenario:  # If no scenario is available
@@ -224,15 +243,23 @@ def go_to_next_screen(table_number):
     print(f"You clicked on Table {table_number}!")
 
     if table_number == 10:  # class_table_2
-        run_math_game(screen, width, height)
+        success = run_math_game(screen, width, height)
     elif table_number == 11:
-        run_read_game(screen, width)
+        success = run_read_game(screen, width)
     elif table_number == 9:
-        run_typing_game(screen, width, height)
+        success = run_typing_game(screen, width, height)
     else:
         runs1 = random.randint(1, 8)
         scenario, options = popscene1(runs1)
         show_scenario_screen(scenario, options, table_number)
+        success = True  # Assume success for non-mini-game tasks
+
+    # Update the task checklist if the task was completed successfully
+    if success and 9 <= table_number <= 13:  # Task tables are numbered 9 to 13
+        task_index = table_number - 9  # Convert table number to checklist index
+        if not task_checklist[task_index]:  # Only update if not already completed
+            task_checklist[task_index] = True
+            print(f"Task {table_number} completed and checked off!")
 
 
 # Load the game over image
@@ -240,7 +267,7 @@ game_over_image = pygame.image.load("assets/background/game_over.png").convert_a
 game_over_image = pygame.transform.scale(game_over_image, (width, height))  # Scale to fit the screen
 
 # Define the button area (e.g., a "Restart" button on the game over screen)
-button_rect = pygame.Rect(300, 400, 200, 50)  # Example: (x, y, width, height)
+button_rect = pygame.Rect(300, 325, 200, 50)  # Example: (x, y, width, height)
 
 # Load the completed screen image
 completed_image = pygame.image.load("assets/background/game_over.png").convert_alpha()
@@ -294,6 +321,9 @@ def game_over_loop():
                     # Restart the game
                     return True  # Return True to indicate a restart
         draw_game_over_screen()
+
+# Initialize task checklist
+task_checklist = [False] * len(task_tables)  # False means the task is not completed yet
 
 # Main game loop
 running = True
@@ -384,6 +414,9 @@ while running:
     if health in health_images:
         screen.blit(health_images[health], (10, 10))  # Display health image in the top-left corner
 
+    # Draw the task checklist
+    draw_task_checklist()
+
     # Update the display
     draw_progress_bar()
     pygame.display.flip()
@@ -403,6 +436,7 @@ while running:
                 state["cooldown"] = random.randint(15, 45)
                 state["addressed"] = False
                 state["health_decreased"] = False
+            task_checklist = [False] * len(task_tables)  # Reset the task checklist
         else:
             running = False
 
@@ -421,6 +455,7 @@ while running:
                 state["cooldown"] = random.randint(15, 45)
                 state["addressed"] = False
                 state["health_decreased"] = False
+            task_checklist = [False] * len(task_tables)  # Reset the task checklist
         else:
             running = False
 

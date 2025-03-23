@@ -1,8 +1,8 @@
 # start_screen.py
 import pygame
 import sys
-from game101 import s
-# from typing_game import run_typing_game  # Import your game function
+import subprocess
+import game101
 
 # Initialize Pygame
 pygame.init()
@@ -10,7 +10,7 @@ pygame.init()
 # Screen dimensions
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Typing Game - Start Screen")
+pygame.display.set_caption("Game Start Screen")
 
 # Load assets
 start_bg = pygame.image.load("assets/background/start_screen.png").convert()
@@ -41,8 +41,15 @@ def start_screen():
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if START_BUTTON["rect"].collidepoint(mouse_pos):
-                    run_typing_game(screen, WIDTH)  # Launch the game
-                    pygame.display.set_caption("Typing Game - Start Screen")  # Restore caption
+                    # Close the start screen
+                    pygame.quit()
+                    
+                    # Launch game101.py
+                    try:
+                        subprocess.run(["python", "game101.py"])
+                    except FileNotFoundError:
+                        print("Error: game101.py not found!")
+                    return
 
         # Drawing
         screen.blit(start_bg, (0, 0))
@@ -50,7 +57,7 @@ def start_screen():
         
         # Add button text
         font = pygame.font.Font(None, 50)
-        text = font.render("Start Typing", True, (0, 0, 0))
+        text = font.render("Start Game", True, (0, 0, 0))
         text_rect = text.get_rect(center=START_BUTTON["rect"].center)
         screen.blit(text, text_rect)
 
@@ -59,4 +66,3 @@ def start_screen():
 
 if __name__ == "__main__":
     start_screen()
-    pygame.quit()
