@@ -1,6 +1,7 @@
 # start_screen.py
 import pygame
 import sys
+from game101 import s
 # from typing_game import run_typing_game  # Import your game function
 
 # Initialize Pygame
@@ -40,7 +41,7 @@ def start_screen():
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if START_BUTTON["rect"].collidepoint(mouse_pos):
-                    run_typing_game(screen, WIDTH, HEIGHT)  # Launch the game
+                    run_typing_game(screen, WIDTH)  # Launch the game
                     pygame.display.set_caption("Typing Game - Start Screen")  # Restore caption
 
         # Drawing

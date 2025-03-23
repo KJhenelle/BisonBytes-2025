@@ -226,7 +226,7 @@ def go_to_next_screen(table_number):
     if table_number == 10:  # class_table_2
         run_math_game(screen, width, height)
     elif table_number == 11:
-        run_read_game(screen, width, height)
+        run_read_game(screen, width)
     elif table_number == 9:
         run_typing_game(screen, width, height)
     else:
